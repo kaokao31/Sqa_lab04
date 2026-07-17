@@ -4,135 +4,132 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HealthIndexScoreTest {
 
     @Test
     @DisplayName("TC001: nominal values")
     void testTC001() {
-        HealthIndexScore score = new HealthIndexScore(43, 130, 21);
+        HealthIndexScore score = new HealthIndexScore(43, 130, 15);
+        assertEquals(7, score.getTotalScore());
+        assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
+    }
+
+    @Test
+    @DisplayName("TC002: VO2 Max = min- (-1) -> invalid, expects exception")
+    void testTC002() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new HealthIndexScore(-1, 130, 15));
+    }
+
+    @Test
+    @DisplayName("TC003: VO2 Max = min (0)")
+    void testTC003() {
+        HealthIndexScore score = new HealthIndexScore(0, 130, 15);
+        assertEquals(4, score.getTotalScore());
+        assertEquals(HealthIndexScore.FitnessLevel.POOR, score.getFitnessLevel());
+    }
+
+    @Test
+    @DisplayName("TC004: VO2 Max = min+ (1)")
+    void testTC004() {
+        HealthIndexScore score = new HealthIndexScore(1, 130, 15);
+        assertEquals(4, score.getTotalScore());
+        assertEquals(HealthIndexScore.FitnessLevel.POOR, score.getFitnessLevel());
+    }
+
+    @Test
+    @DisplayName("TC005: VO2 Max = max- (60)")
+    void testTC005() {
+        HealthIndexScore score = new HealthIndexScore(60, 130, 15);
         assertEquals(8, score.getTotalScore());
         assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
     }
 
     @Test
-    @DisplayName("TC002: VO2 Max = min- (24)")
-    void testTC002() {
-        HealthIndexScore score = new HealthIndexScore(24, 130, 21);
-        assertEquals(5, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.POOR, score.getFitnessLevel());
-    }
-
-    @Test
-    @DisplayName("TC003: VO2 Max = min (25)")
-    void testTC003() {
-        HealthIndexScore score = new HealthIndexScore(25, 130, 21);
-        assertEquals(6, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
-    }
-
-    @Test
-    @DisplayName("TC004: VO2 Max = min+ (26)")
-    void testTC004() {
-        HealthIndexScore score = new HealthIndexScore(26, 130, 21);
-        assertEquals(6, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
-    }
-
-    @Test
-    @DisplayName("TC005: VO2 Max = max- (59)")
-    void testTC005() {
-        HealthIndexScore score = new HealthIndexScore(59, 130, 21);
-        assertEquals(9, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
-    }
-
-    @Test
-    @DisplayName("TC006: VO2 Max = max (60)")
+    @DisplayName("TC006: VO2 Max = max (61)")
     void testTC006() {
-        HealthIndexScore score = new HealthIndexScore(60, 130, 21);
+        HealthIndexScore score = new HealthIndexScore(61, 130, 15);
         assertEquals(9, score.getTotalScore());
         assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
     }
 
     @Test
-    @DisplayName("TC007: VO2 Max = max+ (61)")
+    @DisplayName("TC007: VO2 Max = max+ (62)")
     void testTC007() {
-        HealthIndexScore score = new HealthIndexScore(61, 130, 21);
-        assertEquals(10, score.getTotalScore());
+        HealthIndexScore score = new HealthIndexScore(62, 130, 15);
+        assertEquals(9, score.getTotalScore());
         assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
     }
 
     @Test
-    @DisplayName("TC008: RHR = min- (39)")
+    @DisplayName("TC008: RHR = min- (39) -> invalid, expects exception")
     void testTC008() {
-        HealthIndexScore score = new HealthIndexScore(43, 39, 21);
-        assertEquals(12, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.EXCELLENT, score.getFitnessLevel());
+        assertThrows(IllegalArgumentException.class,
+                () -> new HealthIndexScore(43, 39, 15));
     }
 
     @Test
     @DisplayName("TC009: RHR = min (40)")
     void testTC009() {
-        HealthIndexScore score = new HealthIndexScore(43, 40, 21);
-        assertEquals(12, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.EXCELLENT, score.getFitnessLevel());
+        HealthIndexScore score = new HealthIndexScore(43, 40, 15);
+        assertEquals(11, score.getTotalScore());
+        assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
     }
 
     @Test
     @DisplayName("TC010: RHR = min+ (41)")
     void testTC010() {
-        HealthIndexScore score = new HealthIndexScore(43, 41, 21);
-        assertEquals(12, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.EXCELLENT, score.getFitnessLevel());
+        HealthIndexScore score = new HealthIndexScore(43, 41, 15);
+        assertEquals(11, score.getTotalScore());
+        assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
     }
 
     @Test
     @DisplayName("TC011: RHR = max- (219)")
     void testTC011() {
-        HealthIndexScore score = new HealthIndexScore(43, 219, 21);
-        assertEquals(8, score.getTotalScore());
+        HealthIndexScore score = new HealthIndexScore(43, 219, 15);
+        assertEquals(7, score.getTotalScore());
         assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
     }
 
     @Test
     @DisplayName("TC012: RHR = max (220)")
     void testTC012() {
-        HealthIndexScore score = new HealthIndexScore(43, 220, 21);
-        assertEquals(8, score.getTotalScore());
+        HealthIndexScore score = new HealthIndexScore(43, 220, 15);
+        assertEquals(7, score.getTotalScore());
         assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
     }
 
     @Test
-    @DisplayName("TC013: RHR = max+ (221)")
+    @DisplayName("TC013: RHR = max+ (221) -> invalid, expects exception")
     void testTC013() {
-        HealthIndexScore score = new HealthIndexScore(43, 221, 21);
-        assertEquals(8, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
+        assertThrows(IllegalArgumentException.class,
+                () -> new HealthIndexScore(43, 221, 15));
     }
 
     @Test
-    @DisplayName("TC014: HRR = min- (11)")
+    @DisplayName("TC014: HRR = min- (-1) -> invalid, expects exception")
     void testTC014() {
-        HealthIndexScore score = new HealthIndexScore(43, 130, 11);
+        assertThrows(IllegalArgumentException.class,
+                () -> new HealthIndexScore(43, 130, -1));
+    }
+
+    @Test
+    @DisplayName("TC015: HRR = min (0)")
+    void testTC015() {
+        HealthIndexScore score = new HealthIndexScore(43, 130, 0);
         assertEquals(5, score.getTotalScore());
         assertEquals(HealthIndexScore.FitnessLevel.POOR, score.getFitnessLevel());
     }
 
     @Test
-    @DisplayName("TC015: HRR = min (12)")
-    void testTC015() {
-        HealthIndexScore score = new HealthIndexScore(43, 130, 12);
-        assertEquals(7, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
-    }
-
-    @Test
-    @DisplayName("TC016: HRR = min+ (13)")
+    @DisplayName("TC016: HRR = min+ (1)")
     void testTC016() {
-        HealthIndexScore score = new HealthIndexScore(43, 130, 13);
-        assertEquals(7, score.getTotalScore());
-        assertEquals(HealthIndexScore.FitnessLevel.STANDARD, score.getFitnessLevel());
+        HealthIndexScore score = new HealthIndexScore(43, 130, 1);
+        assertEquals(5, score.getTotalScore());
+        assertEquals(HealthIndexScore.FitnessLevel.POOR, score.getFitnessLevel());
     }
 
     @Test
